@@ -1,4 +1,4 @@
-package cucumber.eclipse.steps.jdt;
+package cucumber.eclipse.steps.integration;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;

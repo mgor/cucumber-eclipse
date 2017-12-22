@@ -19,7 +19,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+
 import cucumber.eclipse.editor.Activator;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 
 /**
  * @author girija.panda@nokia.com

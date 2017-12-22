@@ -20,7 +20,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import cucumber.eclipse.editor.Activator;
-import cucumber.eclipse.editor.preferences.ICucumberPreferenceConstants;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 
 public class GherkinFormatterUtil {
 

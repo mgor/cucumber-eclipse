@@ -20,19 +20,21 @@ public class ExtensionRegistryStepProvider implements IStepProvider, IStepListen
 	private List<IStepDefinitions> stepDefinitions = getIntegrationExtensionsOfType(IStepDefinitions.class);
 
 	private IFile file;
-	
+
 	public ExtensionRegistryStepProvider(IFile file) {
 		this.file = file;
 		reloadSteps();
 		addStepListener(this);
 	}
 
+	@Override
 	public void addStepListener(IStepListener listener) {
 		for (IStepDefinitions stepDef : stepDefinitions) {
 			stepDef.addStepListener(listener);
 		}
 	}
 
+	@Override
 	public Set<Step> getStepsInEncompassingProject() {
 		return steps;
 	}
@@ -44,6 +46,7 @@ public class ExtensionRegistryStepProvider implements IStepProvider, IStepListen
 		}
 	}
 
+	@Override
 	public void removeStepListener(IStepListener listener) {
 		for (IStepDefinitions stepDef : stepDefinitions) {
 			stepDef.removeStepListener(listener);

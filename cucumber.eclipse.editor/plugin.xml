@@ -316,7 +316,7 @@
  <extension
          point="cucumber.eclipse.steps.integration">
       <stepDefinitionIntegration
-            class="cucumber.eclipse.editor.steps.jdt.JDTStepDefinitions">
+            class="cucumber.eclipse.steps.integration.StepDefinitions">
       </stepDefinitionIntegration>
   </extension>
  

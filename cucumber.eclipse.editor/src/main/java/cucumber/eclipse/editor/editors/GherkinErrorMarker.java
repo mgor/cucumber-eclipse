@@ -1,6 +1,14 @@
 package cucumber.eclipse.editor.editors;
 
 import static cucumber.eclipse.editor.editors.DocumentUtil.getDocumentLanguage;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.ExamplesTableRow;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,16 +27,8 @@ import org.eclipse.jface.text.IRegion;
 import cucumber.eclipse.editor.Activator;
 import cucumber.eclipse.editor.markers.IMarkerManager;
 import cucumber.eclipse.editor.markers.MarkerIds;
-import cucumber.eclipse.editor.preferences.ICucumberPreferenceConstants;
 import cucumber.eclipse.editor.steps.IStepProvider;
-import gherkin.formatter.Formatter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.ExamplesTableRow;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 
 /**
  * @author andreas
@@ -38,19 +38,19 @@ public class GherkinErrorMarker implements Formatter {
 	private final IMarkerManager markerManager;
 	private final IFile file;
 	private final IDocument document;
-   
+
 	private Set<cucumber.eclipse.steps.integration.Step> foundSteps = null;
 
 	private boolean inScenarioOutline = false;
 
 	private List<gherkin.formatter.model.Step> scenarioOutlineSteps;
 
-	public GherkinErrorMarker(IStepProvider stepProvider, IMarkerManager markerManager, IFile inputfile, IDocument doc) 
+	public GherkinErrorMarker(IStepProvider stepProvider, IMarkerManager markerManager, IFile inputfile, IDocument doc)
 	{
 		this.markerManager = markerManager;
 		this.file = inputfile;
 		this.document = doc;
-        this.foundSteps = stepProvider.getStepsInEncompassingProject();
+		this.foundSteps = stepProvider.getStepsInEncompassingProject();
 	}
 
 	public void removeExistingMarkers() {
@@ -141,7 +141,7 @@ public class GherkinErrorMarker implements Formatter {
 	@Override
 	public void scenarioOutline(ScenarioOutline arg0) {
 		inScenarioOutline = true;
-		
+
 		scenarioOutlineSteps = new ArrayList<gherkin.formatter.model.Step>();
 	}
 
@@ -176,7 +176,7 @@ public class GherkinErrorMarker implements Formatter {
 		}
 		buf.replace(buf.length() - 3, buf.length(), " but got ");
 		buf.append(event);
-		
+
 		try {
 			markerManager.add(MarkerIds.SYNTAX_ERROR,
 					file,
@@ -223,33 +223,33 @@ public class GherkinErrorMarker implements Formatter {
 		}
 		return stepString;
 	}
-	
+
 	public void validateStep(Step stepLine) {
 		validateStep(stepLine, null, -1);
 	}
-	
-	
-	
+
+
+
 	public void validateStep(Step stepLine, Map<String, String> examplesLineMap, int currentLine) {
-		
+
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		
+
 		if (store.getBoolean(ICucumberPreferenceConstants.PREF_CHECK_STEP_DEFINITIONS)) {
-			
+
 			if ("".equals(stepLine.getName())) {
 				try {
 					markMissingStepName(file, document, stepLine);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
-				
+
 				return;
 			}
 
 			String stepString = getResolvedStepStringForExample(stepLine, examplesLineMap);
 			cucumber.eclipse.steps.integration.Step step = new StepMatcher().matchSteps(getDocumentLanguage(document), foundSteps, stepString);
 			step = new StepMatcher().matchSteps(getDocumentLanguage(document), foundSteps, stepString);
-			
+
 			if (step == null) {
 				try {
 					markUnmatchedStep(file, document, stepLine, inScenarioOutline ? currentLine : -1);
@@ -258,15 +258,15 @@ public class GherkinErrorMarker implements Formatter {
 				}
 			}
 		}
-		
+
 	}
 
 	private void markMissingStepName(IFile featureFile, IDocument doc, gherkin.formatter.model.Step stepLine)
 			throws BadLocationException {
-		
+
 		int line = stepLine.getLine() - 1;
 		IRegion lineRegion = doc.getLineInformation(line);
-		
+
 		markerManager.add(MarkerIds.SYNTAX_ERROR,
 				featureFile,
 				IMarker.SEVERITY_WARNING,
@@ -278,7 +278,7 @@ public class GherkinErrorMarker implements Formatter {
 
 	private void markUnmatchedStep(IFile featureFile, IDocument doc, gherkin.formatter.model.Step stepLine,
 			int exampleLine) throws BadLocationException {
-		
+
 		FindReplaceDocumentAdapter find = new FindReplaceDocumentAdapter(doc);
 		IRegion region = find.find(doc.getLineOffset(stepLine.getLine() - 1),
 				stepLine.getName(), true, true, false, false);
@@ -300,12 +300,12 @@ public class GherkinErrorMarker implements Formatter {
 	@Override
 	public void endOfScenarioLifeCycle(Scenario arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void startOfScenarioLifeCycle(Scenario arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

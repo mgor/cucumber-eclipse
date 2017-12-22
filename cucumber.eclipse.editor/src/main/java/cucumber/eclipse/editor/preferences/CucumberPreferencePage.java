@@ -14,6 +14,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import cucumber.eclipse.editor.Activator;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 
 public class CucumberPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
@@ -35,6 +36,10 @@ public class CucumberPreferencePage extends FieldEditorPreferencePage implements
 			ICucumberPreferenceConstants.PREF_CHECK_STEP_DEFINITIONS,
 			getString("&Match Steps with Java Step code"), parent));
 
+		addField(new BooleanFieldEditor(
+			ICucumberPreferenceConstants.PREF_ONLY_SEARCH_PACKAGE,
+			getString("&Only match steps from package and sub-packages"), parent));
+
 		label = new CLabel(parent, SWT.NULL);
 		label.setText(getString("Gherkin Formatting"));
 		label.setImage(getImage("icons/cukes.gif"));
@@ -51,6 +56,11 @@ public class CucumberPreferencePage extends FieldEditorPreferencePage implements
 			ICucumberPreferenceConstants.PREF_FORMAT_PRESERVE_BLANK_LINE_BETWEEN_STEPS,
 			getString("&Preserve blank lines between steps"), parent));
 
+	}
+
+	// Get Only Search Package
+	public boolean getOnlySearchPackage() {
+		return getPreferenceStore().getBoolean(ICucumberPreferenceConstants.PREF_ONLY_SEARCH_PACKAGE);
 	}
 
 	public static Image getImage(String imagePath) {

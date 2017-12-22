@@ -1,6 +1,7 @@
 package cucumber.eclipse.editor.editors;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IMarker;
@@ -30,9 +31,8 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 
 import cucumber.eclipse.editor.markers.MarkerResolutionProposal;
 import cucumber.eclipse.editor.markers.StepCreationMarkerResolutionGenerator;
-
 import cucumber.eclipse.editor.Activator;
-import cucumber.eclipse.editor.preferences.ICucumberPreferenceConstants;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 
 public class GherkinConfiguration extends TextSourceViewerConfiguration {
 

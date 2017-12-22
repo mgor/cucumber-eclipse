@@ -1,4 +1,4 @@
-package cucumber.eclipse.steps.jdt;
+package cucumber.eclipse.steps.integration;
 
 public class CucumberAnnotation {
 

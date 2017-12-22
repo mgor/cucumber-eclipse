@@ -1,5 +1,8 @@
 package cucumber.eclipse.editor.editors;
 
+import gherkin.lexer.LexingError;
+import gherkin.parser.Parser;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +41,6 @@ import cucumber.eclipse.editor.steps.IStepProvider;
 import cucumber.eclipse.editor.template.GherkinSampleTemplate;
 import cucumber.eclipse.steps.integration.IStepListener;
 import cucumber.eclipse.steps.integration.StepsChangedEvent;
-import gherkin.lexer.LexingError;
-import gherkin.parser.Parser;
 
 public class Editor extends TextEditor implements IStepListener {
 
@@ -51,15 +52,15 @@ public class Editor extends TextEditor implements IStepListener {
 	private GherkinOutlinePage outlinePage;
 	private GherkinModel model;
 	private IStepProvider stepProvider;
-	
+
 	public Editor() {
 		super();
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new GherkinConfiguration(this, colorManager));
-		
+
 		// Commented By Girija to override any blank feature file with sample template
-		//setDocumentProvider(new GherkinDocumentProvider());		
-		
+		//setDocumentProvider(new GherkinDocumentProvider());
+
 		// Added By Girija
 		// Used to create a Sample Template for any Blank Feature File
 		setDocumentProvider(new GherkinDocumentProvider(GherkinSampleTemplate.getFeatureTemplate()));
@@ -67,7 +68,7 @@ public class Editor extends TextEditor implements IStepListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createSourceViewer
 	 * (org.eclipse.swt.widgets.Composite,
@@ -85,10 +86,10 @@ public class Editor extends TextEditor implements IStepListener {
 
 		return viewer;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl
 	 * (org.eclipse.swt.widgets.Composite)
@@ -121,15 +122,15 @@ public class Editor extends TextEditor implements IStepListener {
 	public void onStepsChanged(StepsChangedEvent event) {
 		validateAndMark();
 	}
-	
+
 	public GherkinModel getModel() {
 		return model;
 	}
-	
+
 	public IStepProvider getStepProvider() {
 		return stepProvider;
 	}
-	
+
 	public void updateGherkinModel(GherkinModel model) {
 		validateAndMark();
 		updateOutline(model.getFeatureElement());
@@ -144,7 +145,7 @@ public class Editor extends TextEditor implements IStepListener {
 		annotationModel.modifyAnnotations(oldAnnotations, newAnnotations, null);
 		oldAnnotations = newAnnotations.keySet().toArray(new Annotation[0]);
 	}
-	
+
 	TextSelection getSelection() {
 		return (TextSelection) getSelectionProvider().getSelection();
 	}
@@ -163,7 +164,7 @@ public class Editor extends TextEditor implements IStepListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.ui.editors.text.TextEditor#doSetInput(org.eclipse.ui.IEditorInput
 	 * )
@@ -173,11 +174,12 @@ public class Editor extends TextEditor implements IStepListener {
 		super.doSetInput(newInput);
 		input = newInput;
 		model = new GherkinModel();
-		
+
 		stepProvider = new ExtensionRegistryStepProvider(((IFileEditorInput) newInput).getFile());
 		stepProvider.addStepListener(this);
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 
@@ -189,17 +191,18 @@ public class Editor extends TextEditor implements IStepListener {
 		}
 	}
 
-	public Object getAdapter(Class required) {
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class required) {
 		if (IContentOutlinePage.class.equals(required)) {
 			if (outlinePage == null) {
 				outlinePage = new GherkinOutlinePage();
 				outlinePage.addSelectionChangedListener(new ISelectionChangedListener() {
-					
+
 					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						PositionedElement firstElement = (PositionedElement) ((IStructuredSelection)
 								event.getSelection()).getFirstElement();
-						
+
 						if (firstElement != null) {
 							try {
 								selectAndReveal(firstElement.toPosition().getOffset(), 0);

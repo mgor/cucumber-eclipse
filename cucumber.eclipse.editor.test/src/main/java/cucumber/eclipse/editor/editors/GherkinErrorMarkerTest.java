@@ -16,9 +16,9 @@ import org.junit.Test;
 
 import cucumber.eclipse.editor.Activator;
 import cucumber.eclipse.editor.markers.IMarkerManager;
-import cucumber.eclipse.editor.preferences.ICucumberPreferenceConstants;
 import cucumber.eclipse.editor.steps.IStepProvider;
 import cucumber.eclipse.editor.tests.TestFile;
+import cucumber.eclipse.steps.integration.ICucumberPreferenceConstants;
 import cucumber.eclipse.steps.integration.IStepListener;
 import cucumber.eclipse.steps.integration.Step;
 import gherkin.parser.Parser;
